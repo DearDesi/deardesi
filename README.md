@@ -1,2 +1,3 @@
 # dear.desi
-A nice, friendly web app for getting started with Desirae
+
+A nice, friendly tool to help you get set up and start blogging with Desirae
