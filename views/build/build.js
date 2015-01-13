@@ -52,7 +52,8 @@ angular.module('myApp.build', ['ngRoute'])
     if ('production' === envstr) {
       env = {
         url: scope.production_url
-      , base_url: scope.development_url.replace(/(https?:\/\/[^\/#?]+).*/, '$1')
+      , base_url: scope.production_url.replace(/(https?:\/\/[^\/#?]+).*/, '$1')
+      , base_path: scope.production_url.replace(/https?:\/\/[^\/#?]+/, '$1')
       , compiled_path: 'compiled'
       , since: 0
       , onError: scope.onError
