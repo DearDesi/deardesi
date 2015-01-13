@@ -53,7 +53,7 @@ angular.module('myApp.build', ['ngRoute'])
       env = {
         url: scope.production_url
       , base_url: scope.production_url.replace(/(https?:\/\/[^\/#?]+).*/, '$1')
-      , base_path: scope.production_url.replace(/https?:\/\/[^\/#?]+/, '$1')
+      , base_path: scope.production_url.replace(/https?:\/\/[^\/#?]+/, '')
       , compiled_path: 'compiled'
       , since: 0
       , onError: scope.onError
