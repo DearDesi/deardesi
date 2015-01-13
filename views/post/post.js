@@ -88,6 +88,8 @@ angular.module('myApp.post', ['ngRoute'])
     if (!/\.html?$/.test(selected.path)) {
       selected.path = window.path.join(selected.path, 'index.html');
     }
+
+    selected.url = window.path.join(scope.site.base_url + window.path.join(scope.site.base_path, post.yml.permalink));
     selected.abspath = window.path.join(scope.blogdir, selected.path);
   };
   scope.onFrontmatterChange = function () {
@@ -107,10 +109,13 @@ angular.module('myApp.post', ['ngRoute'])
       scope.selected.post.yml = data;
 
       post = scope.selected.post;
+
       scope.selected.path = window.path.join((scope.selected.collection || 'posts'), window.path.basename(post.yml.permalink));
-      if (!/\.html?$/.test(scope.selected.path)) {
-        scope.selected.path = window.path.join(scope.selected.path, 'index.html');
+      if (!/\.html?$/.test(window.path.basename(post.yml.permalink))) {
+        scope.selected.path = window.path.join(scope.selected.path.replace(/\.w+$/, ''), 'index.html');
       }
+      scope.selected.url = window.path.join(scope.site.base_url + window.path.join(scope.site.base_path, post.yml.permalink));
+      scope.selected.abspath = window.path.join(scope.blogdir, scope.selected.path);
     } catch(e) {
       console.error(e);
       console.error('ignoring update that created parse error');

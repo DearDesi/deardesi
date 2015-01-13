@@ -1,13 +1,22 @@
 angular.module('myApp.services', []).
-  factory('Desirae', ['$q', function($q) {
-    var Desi = window.Desi || require('./deardesi').Desi
-      , desi = {}
-      , fsapi = window.fsapi
+  factory('Desirae', ['$q', '$http', function ($q, $http) {
+    var Desi        = window.Desi || require('./deardesi').Desi
+      , desi        = {/*TODO api_base: '/api'*/}
+      , fsapi       = window.fsapi
       ;
+
+    function getBlogdir () {
+      return $http.get('/api/fs/rootdir').then(function (resp) {
+        desi.blogdir = resp.data;
+        return resp.data;
+      });
+    }
+    getBlogdir();
 
     return {
       reset: function () {
         desi = {};
+        return getBlogdir();
       }
     , toDesiDate: Desi.toLocaleDate
     , meta: function () {
