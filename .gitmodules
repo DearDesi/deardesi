@@ -1,0 +1,3 @@
+[submodule "desirae"]
+	path = desirae
+	url = git@github.com:DearDesi/desirae.git

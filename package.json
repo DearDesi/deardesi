@@ -1,0 +1,35 @@
+{
+  "name": "deardesi",
+  "version": "0.8.0",
+  "description": "A nice, friendly tool to help you get set up and start blogging, built on the Desirae blogging platform",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DearDesi/deardesi.git"
+  },
+  "keywords": [
+    "dear",
+    "desi",
+    "deardesi",
+    "dear.desi",
+    "desirae",
+    "static",
+    "site",
+    "blog",
+    "blogging",
+    "generator",
+    "ruhoh",
+    "jekyll",
+    "nanoc",
+    "octopress"
+  ],
+  "author": "AJ ONeal <coolaj86@gmail.com> (http://coolaj86.com/)",
+  "license": "Apache2",
+  "bugs": {
+    "url": "https://github.com/DearDesi/deardesi/issues"
+  },
+  "homepage": "https://github.com/DearDesi/deardesi"
+}
