@@ -17,20 +17,14 @@ angular.module('myApp.build', ['ngRoute'])
     ;
 
   function init() {
-    console.log('desi loading');
     DesiraeService.meta().then(function (desi) {
       scope.blogdir = desi.blogdir.path.replace(/^\/(Users|home)\/[^\/]+\//, '~/');
       scope.site = desi.site;
 
-      console.log(desi.site.base_url);
-      console.log(desi.site.base_path);
       scope.production_url = desi.site.base_url + path.join('/', desi.site.base_path);
-      console.log(scope.production_url);
 
       // this is the responsibility of the build system (Dear Desi), not the library (Desirae)
       scope.development_url = location.href.replace(/\/(#.*)?$/, '') + path.join('/', 'compiled_dev');
-      console.log(scope.development_url);
-
     }).catch(function (e) {
       window.alert("An Error Occured. Most errors that occur in the init phase are parse errors in the config files or permissions errors on files or directories, but check the error console for details.");
       console.error(e);
@@ -58,7 +52,7 @@ angular.module('myApp.build', ['ngRoute'])
     if ('production' === envstr) {
       env = {
         url: scope.production_url
-      , base_url: scope.development_url.replace(/(https?:\/\/[^\/#?]+)/, '$1')
+      , base_url: scope.development_url.replace(/(https?:\/\/[^\/#?]+).*/, '$1')
       , compiled_path: 'compiled'
       , since: 0
       , onError: scope.onError
@@ -66,7 +60,7 @@ angular.module('myApp.build', ['ngRoute'])
     } else {
       env = {
         url: scope.development_url
-      , base_url: scope.development_url.replace(/(https?:\/\/[^\/#?]+)/, '$1')
+      , base_url: scope.development_url.replace(/(https?:\/\/[^\/#?]+).*/, '$1')
       , base_path: scope.development_url.replace(/https?:\/\/[^\/#?]+/, '')
       , compiled_path: 'compiled_dev'
       , since: 0

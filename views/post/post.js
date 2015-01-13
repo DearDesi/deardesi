@@ -15,7 +15,6 @@ angular.module('myApp.post', ['ngRoute'])
     ;
 
   function init() {
-    console.log('desi loading');
     Desirae.meta().then(function (desi) {
       scope.blogdir = desi.blogdir.path.replace(/^\/(Users|home)\/[^\/]+\//, '~/');
       scope.site = desi.site;
@@ -34,13 +33,13 @@ angular.module('myApp.post', ['ngRoute'])
   function newPost() {
     scope.selected = {
       format: 'md'
-    , permalink: "/article/new.md"
+    , permalink: "/article/new.html"
     , uuid: window.uuid.v4()
     , abspath: scope.blogdir
     , post: { 
         yml: {
           title: ""
-        , permalink: "/article/new.md"
+        , permalink: "/article/new.html"
         , date: Desirae.toDesiDate(new Date())// "YYYY-MM-DD HH:MM pm" // TODO desirae
         , updated: null
         , description: ""
@@ -71,23 +70,29 @@ angular.module('myApp.post', ['ngRoute'])
         .replace(/^-+/g, '')
         .replace(/-+$/g, '')
         .replace(/--/g, '-')
-        + '.' + selected.format
+        + '/' // + '.html' //+ selected.format
         ;
 
       post.yml.permalink = selected.permalink;
     }
+    /*
     if (window.path.extname(post.yml.permalink) !== '.' + selected.format) {
      post.yml.permalink = post.yml.permalink.replace(/\.\w+$/, '.' + selected.format);
     }
+    */
 
     post.frontmatter = window.jsyaml.dump(post.yml).trim();
 
     // TODO use some sort of filepath pattern in config.yml
     selected.path = window.path.join((selected.collection || 'posts'), window.path.basename(post.yml.permalink));
+    if (!/\.html?$/.test(selected.path)) {
+      selected.path = window.path.join(selected.path, 'index.html');
+    }
     selected.abspath = window.path.join(scope.blogdir, selected.path);
   };
   scope.onFrontmatterChange = function () {
     var data
+      , post
       ;
 
     try {
@@ -95,11 +100,17 @@ angular.module('myApp.post', ['ngRoute'])
         throw new Error('deleted frontmatter');
       }
       data = window.jsyaml.load(scope.selected.post.frontmatter);
-      scope.selected.format = data.permalink.replace(/.*\.(\w+$)/, '$1');
+      //scope.selected.format = data.permalink.replace(/.*\.(\w+$)/, '$1');
       if (!data.permalink) {
         data = scope.selected.permalink;
       }
       scope.selected.post.yml = data;
+
+      post = scope.selected.post;
+      scope.selected.path = window.path.join((scope.selected.collection || 'posts'), window.path.basename(post.yml.permalink));
+      if (!/\.html?$/.test(scope.selected.path)) {
+        scope.selected.path = window.path.join(scope.selected.path, 'index.html');
+      }
     } catch(e) {
       console.error(e);
       console.error('ignoring update that created parse error');
@@ -119,7 +130,6 @@ angular.module('myApp.post', ['ngRoute'])
   }
 
   scope.upsert = function () {
-    console.log('upserted');
     if (-1 === scope.extensions.indexOf(scope.selected.format)) {
       window.alert('.' + scope.selected.format + ' is not a supported extension.\n\nPlease choose from: .' + scope.extensions.join(' .'));
       return;
@@ -147,9 +157,9 @@ angular.module('myApp.post', ['ngRoute'])
         + scope.selected.post.body.trim()
     });
 
-    console.log(files);
     Desirae.putFiles(files).then(function (results) {
       console.log('TODO check for error');
+      console.log(files);
       console.log(results);
       $location.path('/build');
     }).catch(function (e) {
