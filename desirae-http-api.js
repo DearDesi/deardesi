@@ -22,14 +22,14 @@ module.exports.create = function (options) {
       ;
 
     if (!dirnames || !dirnames.length) {
-      res.json({ error: "please specify GET w/ req.query.dir or POST w/ _method=GET&dirs=path/to/thing,..." });
+      res.send({ error: "please specify GET w/ req.query.dir or POST w/ _method=GET&dirs=path/to/thing,..." });
       return;
     }
 
     if (!dirnames.every(function (dirname) {
       return 'string' === typeof dirname;
     })) {
-      res.json({ error: "malformed request: " + JSON.stringify(dirnames) });
+      res.send({ error: "malformed request: " + JSON.stringify(dirnames) });
       return;
     }
 
@@ -56,9 +56,9 @@ module.exports.create = function (options) {
     // TODO opts.contents?
     fsapi.walk.walkDirs(options.blogdir, dirnames, opts).then(function (stats) {
       if (!req.body.dirs && !req.query.dirs) {
-        res.json(stats[dirnames[0]]);
+        res.send(stats[dirnames[0]]);
       } else {
-        res.json(stats);
+        res.send(stats);
       }
     });
   };
@@ -73,13 +73,13 @@ module.exports.create = function (options) {
       ;
 
     if (!filepaths || !filepaths.length) {
-      res.json({ error: "please specify GET w/ req.query.path or POST _method=GET&paths=path/to/thing,..." });
+      res.send({ error: "please specify GET w/ req.query.path or POST _method=GET&paths=path/to/thing,..." });
       return;
     }
 
     return fsapi.getfs(options.blogdir, filepaths).then(function (files) {
       if (!req.body.paths && !req.query.paths) {
-        res.json(files[0]);
+        res.send(files[0]);
       } else {
         res.send(files);
       }
@@ -97,13 +97,13 @@ module.exports.create = function (options) {
       ;
 
     if (!files || !files.length) {
-      res.json({ error: "please specify POST w/ req.body.files" });
+      res.send({ error: "please specify POST w/ req.body.files" });
       return;
     }
 
     opts.tmpdir = options.tmpdir;
     return fsapi.putfs(options.blogdir, files, opts).then(function (results) {
-      res.json(results);
+      res.send(results);
     });
   };
 
@@ -118,12 +118,12 @@ module.exports.create = function (options) {
       ;
 
     if ('object' !== typeof files || !Object.keys(files).length) {
-      res.json({ error: "please specify POST w/ req.body.files" });
+      res.send({ error: "please specify POST w/ req.body.files" });
       return;
     }
 
     return fsapi.copyfs(options.blogdir, files, opts).then(function (results) {
-      res.json(results);
+      res.send(results);
     });
   };
   //

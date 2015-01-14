@@ -1,13 +1,13 @@
 'use strict';
 
-module.exports.create = function (options) {
+var path = require('path');
+
+function create(options) {
   var connect     = require('connect')
     , query       = require('connect-query')
     , bodyParser  = require('body-parser')
     , serveStatic = require('serve-static')
     , send        = require('connect-send-json')
-
-    , path        = require('path')
 
     , app         = connect()
     , restful     = require('./desirae-http-api').create(options)
@@ -43,7 +43,7 @@ module.exports.create = function (options) {
       var pathname = path.resolve(options.blogdir)
         ;
 
-      res.json({
+      res.send({
         path: pathname
       , name: path.basename(pathname)
       , relativePath: path.dirname(pathname)
@@ -63,4 +63,7 @@ module.exports.create = function (options) {
     ;
 
   return app;
-};
+}
+
+module.exports = create({ blogdir: path.join(__dirname, 'blog') });
+module.exports.create = create;
