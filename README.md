@@ -10,19 +10,24 @@ Install and Usage
 
 If you're on OS X or Linux, it's as easy as pie to install and use Desirae.
 
-First install node.js, if you haven't already.
+First install io.js (or node.js), if you haven't already.
 
 ```bash
-# Install node.js/io.js v0.11.14+
+# io.js
+
+echo "v1.0.1" > /tmp/NODE_VER
+curl -fsSL bit.ly/easy-install-iojs | bash
+
+# node.js
 
 echo "v0.11.14" > /tmp/NODE_VER
 curl -fsSL bit.ly/easy-install-node | bash
 ```
 
-Then install deardesi
+Then install desi
 
 ```bash
-npm install -g deardesi
+npm install -g desi
 ```
 
 And create a copy of the desirae-seed
@@ -38,19 +43,34 @@ git submodule update
 And now fire up Dear Desi to get started
 
 ```
-deardesi ~/my-desirae-blog 65080
+desi serve -b ~/my-desirae-blog
 ```
 
+Now open up your evergreen browser to <http://local.dear.desi:65080>
 
-Once you've done the initial setup, you can run deardesi from the commandline
+Commandline
+===========
+
+Once you've done the initial setup in the browser, you can run `desi` from the commandline
+
+**NOTE:** You can omit the `-b` if you are already in your blog directory.
+
+Build Production Site
+---------------------
+
+You must set `base_path` and `base_url` in `site.yml` before attempting to build.
 
 ```
-deardesi ~/my-desirae-blog ~/my-desirae-blog/compiled
+desi build -b ~/my-desirae-blog
 ```
+
+Outputs to `~/my-desirae-blog/compiled`
 
 Create a new Post
 -----------------
 
 ```
-deardesi post "My First Post"
+desi post "My First Post" -b ~/my-desirae-blog
 ```
+
+Outputs to `~/my-desirae-blog/posts/my-first-post.md`

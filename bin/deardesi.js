@@ -7,7 +7,7 @@ var PromiseA = require('bluebird')
   ;
 
 cli.parse({
-  blog: ['b', 'Where your blog is, i.e. ~/path/to/blog', 'string', './']
+  blogdir: ['d', 'Where your blog is, i.e. ~/path/to/blog', 'string', './']
 //, output: ['o', 'name of output directory within ~/path/to/blog', 'string', './compiled']
 });
 
