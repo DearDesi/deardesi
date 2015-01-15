@@ -25,6 +25,28 @@ function serve(blogdir) {
   //secureServer = https.createServer(app).listen(65043);
 }
 
+function build(blogdir) {
+  var Desi = require('desirae').Desirae
+    , desi = {}
+    , env = {}
+    ;
+
+  env.working_path = env.blogdir = blogdir;
+  Desi.init(desi, env).then(function () {
+    env.url = desi.site.base_url + desi.site.base_path.replace(/^\/$/, '');
+    env.base_url = desi.site.base_url;
+    env.base_path = desi.site.base_path;
+    env.compiled_path = 'compiled';
+    //env.since = 0;
+
+    Desi.buildAll(desi, env).then(function () {
+      Desi.write(desi, env).then(function () {
+        console.log('Build Success!');
+      });
+    });
+  });
+}
+
 cli.main(function (args, options) {
   var command = args[0]
     , blogdir = options.blog
@@ -45,6 +67,10 @@ cli.main(function (args, options) {
   if ('init' === command) {
     console.error("`init' not yet implemented");
     process.exit(1);
+    return;
+  }
+  else if ('build' === command) {
+    build(blogdir);
     return;
   }
   else if ('post' === command) {

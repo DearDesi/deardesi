@@ -1,8 +1,7 @@
 'use strict';
 
-  var fsapi       = require('./desirae/lib/fsapi').fsapi
-    , path        = require('path')
-    ;
+var fsapi       = require('desirae/lib/node-adapters').fsapi
+  ;
 
 module.exports.create = function (options) {
   var restful = {}

@@ -59,7 +59,7 @@ function create(options) {
     //.use(serveStatic(options.blogdir))
     .use('/blog', serveStatic(options.blogdir))
     .use('/compiled_dev', serveStatic(path.join(options.blogdir, '/compiled_dev')))
-    //.use('/compiled', serveStatic(path.join(options.blogdir, '/compiled')))
+    .use('/compiled', serveStatic(path.join(options.blogdir, '/compiled')))
     ;
 
   return app;

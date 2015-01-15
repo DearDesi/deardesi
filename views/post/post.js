@@ -16,6 +16,7 @@ angular.module('myApp.post', ['ngRoute'])
 
   function init() {
     Desirae.meta().then(function (desi) {
+      console.warn(desi);
       scope.blogdir = desi.blogdir.path.replace(/^\/(Users|home)\/[^\/]+\//, '~/');
       scope.site = desi.site;
       newPost();

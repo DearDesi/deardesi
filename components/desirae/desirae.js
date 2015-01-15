@@ -1,8 +1,7 @@
 angular.module('myApp.services', []).
   factory('Desirae', ['$q', '$http', function ($q, $http) {
-    var Desi        = window.Desi || require('./deardesi').Desi
+    var Desi        = window.Desirae || require('./deardesi').Desirae
       , desi        = {/*TODO api_base: '/api'*/}
-      , fsapi       = window.fsapi
       ;
 
     function getBlogdir () {
@@ -65,7 +64,7 @@ angular.module('myApp.services', []).
         return d.promise;
       }
     , putFiles: function (files) {
-        return $q.when(fsapi.putFiles(files));
+        return $q.when(Desi.fsapi.putFiles(files));
       }
     };
   }]
