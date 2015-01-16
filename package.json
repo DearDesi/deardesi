@@ -1,6 +1,6 @@
 {
   "name": "desi",
-  "version": "0.5.4",
+  "version": "0.5.5",
   "description": "A nice, friendly tool to help you get set up and start blogging, built on the Desirae blogging platform",
   "main": "server.js",
   "scripts": {
