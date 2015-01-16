@@ -43,7 +43,7 @@ git submodule update
 And now fire up Dear Desi to get started
 
 ```
-desi serve -b ~/my-desirae-blog
+desi serve -d ~/my-desirae-blog
 ```
 
 Now open up your evergreen browser to <http://local.dear.desi:65080>
@@ -53,7 +53,7 @@ Commandline
 
 Once you've done the initial setup in the browser, you can run `desi` from the commandline
 
-**NOTE:** You can omit the `-b` if you are already in your blog directory.
+**NOTE:** You can omit the `-d` if you are already in your blog directory.
 
 Build Production Site
 ---------------------
@@ -61,7 +61,7 @@ Build Production Site
 You must set `base_path` and `base_url` in `site.yml` before attempting to build.
 
 ```
-desi build -b ~/my-desirae-blog
+desi build -d ~/my-desirae-blog
 ```
 
 Outputs to `~/my-desirae-blog/compiled`
@@ -70,7 +70,7 @@ Create a new Post
 -----------------
 
 ```
-desi post "My First Post" -b ~/my-desirae-blog
+desi post "My First Post" -d ~/my-desirae-blog
 ```
 
 Outputs to `~/my-desirae-blog/posts/my-first-post.md`

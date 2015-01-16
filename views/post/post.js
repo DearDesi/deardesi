@@ -9,13 +9,13 @@ angular.module('myApp.post', ['ngRoute'])
 }])
 
 .controller('PostCtrl'
-  , ['$scope', '$location', '$timeout', 'Desirae'
-  , function ($scope, $location, $timeout, Desirae) {
+  , ['$scope', '$location', '$timeout', 'DesiraeService'
+  , function ($scope, $location, $timeout, DesiraeService) {
   var scope = this
     ;
 
   function init() {
-    Desirae.meta().then(function (desi) {
+    DesiraeService.meta().then(function (desi) {
       console.warn(desi);
       scope.blogdir = desi.blogdir.path.replace(/^\/(Users|home)\/[^\/]+\//, '~/');
       scope.site = desi.site;
@@ -41,7 +41,7 @@ angular.module('myApp.post', ['ngRoute'])
         yml: {
           title: ""
         , permalink: "/article/new.html"
-        , date: Desirae.toDesiDate(new Date())// "YYYY-MM-DD HH:MM pm" // TODO desirae
+        , date: DesiraeService.toDesiDate(new Date())// "YYYY-MM-DD HH:MM pm" // TODO desirae
         , updated: null
         , description: ""
         , categories: []
@@ -128,7 +128,7 @@ angular.module('myApp.post', ['ngRoute'])
     $timeout.cancel(scope.dtlock);
     scope.dtlock = $timeout(function () {
       if (scope.selected && scope.selected.date === scope.selected.post.yml.date) {
-        scope.selected.date = scope.selected.post.yml.date = Desirae.toDesiDate(new Date());
+        scope.selected.date = scope.selected.post.yml.date = DesiraeService.toDesiDate(new Date());
       }
       scope.onChange();
       updateDate();
@@ -163,7 +163,7 @@ angular.module('myApp.post', ['ngRoute'])
         + scope.selected.post.body.trim()
     });
 
-    Desirae.putFiles(files).then(function (results) {
+    DesiraeService.putFiles(files).then(function (results) {
       console.log('TODO check for error');
       console.log(files);
       console.log(results);
