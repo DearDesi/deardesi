@@ -4,6 +4,10 @@ angular.module('myApp.services', []).
       , desi        = {/*TODO api_base: '/api'*/}
       ;
 
+    // TODO what version of ruhoh are ruhoh-twitter and ruhoh-boostrap-2
+    Desi.registerDataMapper('ruhoh', window.DesiraeDatamapRuhoh || require('desirae-datamap-ruhoh').DesiraeDatamapRuhoh);
+    Desi.registerDataMapper('ruhoh@2.6', window.DesiraeDatamapRuhoh || require('desirae-datamap-ruhoh').DesiraeDatamapRuhoh);
+
     function getBlogdir () {
       return $http.get('/api/fs/rootdir').then(function (resp) {
         desi.blogdir = resp.data;

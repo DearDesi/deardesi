@@ -5,12 +5,20 @@ var PromiseA = require('bluebird')
   , path = require('path')
   , cli = require('cli')
   , UUID = require('node-uuid')
+  , Desi
   ;
 
 cli.parse({
   blogdir: ['d', 'Where your blog is, i.e. ~/path/to/blog', 'string', './']
 //, output: ['o', 'name of output directory within ~/path/to/blog', 'string', './compiled']
 });
+
+function init() {
+  Desi = require('desirae').Desirae;
+
+  Desi.registerDataMapper('ruhoh', require('desirae-datamap-ruhoh').DesiraeDatamapRuhoh);
+  Desi.registerDataMapper('ruhoh@2.6', require('desirae-datamap-ruhoh').DesiraeDatamapRuhoh);
+}
 
 function serve(blogdir) {
   var http = require('http')
@@ -27,8 +35,7 @@ function serve(blogdir) {
 }
 
 function build(blogdir) {
-  var Desi = require('desirae').Desirae
-    , desi = {}
+  var desi = {}
     , env = {}
     ;
 
@@ -60,9 +67,7 @@ function createPost(originalDir, blogdir, title, extra) {
     process.exit(1);
   }
 
-  var Desi = require('desirae').Desirae
-    //, desi = {}
-    , env = {}
+  var env = {}
     , post = {}
     , slug
     , filepath
@@ -149,7 +154,10 @@ function createPost(originalDir, blogdir, title, extra) {
   });
 }
 
+
 cli.main(function (args, options) {
+  init();
+
   var command = args[0]
     , blogdir = options.blogdir
     , originalDir = blogdir

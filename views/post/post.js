@@ -9,7 +9,7 @@ angular.module('myApp.post', ['ngRoute'])
 }])
 
 .controller('PostCtrl'
-  , ['$scope', '$location', '$timeout', 'DesiraeService'
+  , ['$scope', '$location', '$timeout', 'Desirae'
   , function ($scope, $location, $timeout, DesiraeService) {
   var scope = this
     ;
@@ -19,6 +19,7 @@ angular.module('myApp.post', ['ngRoute'])
       console.warn(desi);
       scope.blogdir = desi.blogdir.path.replace(/^\/(Users|home)\/[^\/]+\//, '~/');
       scope.site = desi.site;
+      scope.env = desi.site;
       newPost();
 
       updateDate();
@@ -37,6 +38,7 @@ angular.module('myApp.post', ['ngRoute'])
     , permalink: "/article/new.html"
     , uuid: window.uuid.v4()
     , abspath: scope.blogdir
+    , sourcepath: ''
     , post: { 
         yml: {
           title: ""
@@ -64,15 +66,17 @@ angular.module('myApp.post', ['ngRoute'])
     post.yml.title = post.yml.title || '';
     post.yml.description = post.yml.description || '';
 
+    scope.slug = post.yml.title.toLowerCase()
+      .replace(/["']/g, '')
+      .replace(/\W/g, '-')
+      .replace(/^-+/g, '')
+      .replace(/-+$/g, '')
+      .replace(/--/g, '-')
+      ;
+
     if (selected.permalink === post.yml.permalink) {
-      selected.permalink = '/articles/' + post.yml.title.toLowerCase()
-        .replace(/["']/g, '')
-        .replace(/\W/g, '-')
-        .replace(/^-+/g, '')
-        .replace(/-+$/g, '')
-        .replace(/--/g, '-')
-        + '/' // + '.html' //+ selected.format
-        ;
+      selected.permalink = '/articles/' + scope.slug + '/';
+      // + '.html' //+ selected.format
 
       post.yml.permalink = selected.permalink;
     }
@@ -85,13 +89,14 @@ angular.module('myApp.post', ['ngRoute'])
     post.frontmatter = window.jsyaml.dump(post.yml).trim();
 
     // TODO use some sort of filepath pattern in config.yml
-    selected.path = window.path.join((selected.collection || 'posts'), window.path.basename(post.yml.permalink));
+    selected.path = window.path.join((scope.env.compiled_path || 'compiled'), post.yml.permalink);
     if (!/\.html?$/.test(selected.path)) {
       selected.path = window.path.join(selected.path, 'index.html');
     }
 
     selected.url = window.path.join(scope.site.base_url + window.path.join(scope.site.base_path, post.yml.permalink));
     selected.abspath = window.path.join(scope.blogdir, selected.path);
+    selected.sourcepath = window.path.join((selected.collection || 'posts'), scope.slug + '.' + selected.format);
   };
   scope.onFrontmatterChange = function () {
     var data
@@ -111,12 +116,13 @@ angular.module('myApp.post', ['ngRoute'])
 
       post = scope.selected.post;
 
-      scope.selected.path = window.path.join((scope.selected.collection || 'posts'), window.path.basename(post.yml.permalink));
+      scope.selected.path = window.path.join((scope.env.compiled_path || 'compiled'), post.yml.permalink);
       if (!/\.html?$/.test(window.path.basename(post.yml.permalink))) {
         scope.selected.path = window.path.join(scope.selected.path.replace(/\.w+$/, ''), 'index.html');
       }
       scope.selected.url = window.path.join(scope.site.base_url + window.path.join(scope.site.base_path, post.yml.permalink));
       scope.selected.abspath = window.path.join(scope.blogdir, scope.selected.path);
+      scope.selected.sourcepath = window.path.join((scope.selected.collection || 'posts'), scope.slug + '.' + scope.selected.format);
     } catch(e) {
       console.error(e);
       console.error('ignoring update that created parse error');
@@ -153,7 +159,7 @@ angular.module('myApp.post', ['ngRoute'])
       ;
 
     files.push({
-      path: scope.selected.path
+      path: scope.selected.sourcepath
     , contents: 
           '---\n'
         + scope.selected.post.frontmatter.trim()

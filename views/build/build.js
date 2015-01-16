@@ -21,6 +21,11 @@ angular.module('myApp.build', ['ngRoute'])
       scope.blogdir = desi.blogdir.path.replace(/^\/(Users|home)\/[^\/]+\//, '~/');
       scope.site = desi.site;
 
+      if (!desi.site.base_url || !desi.site.base_path) {
+        window.alert("Please go back to the site config and enter any mandatory missing fields (base_url, base_path).");
+        return;
+      }
+
       scope.production_url = desi.site.base_url + path.join('/', desi.site.base_path);
 
       // this is the responsibility of the build system (Dear Desi), not the library (Desirae)

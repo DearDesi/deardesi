@@ -3,7 +3,7 @@
     <div class="col-xs-12">
 
       <div class="page-header">
-        <h1>Welcome to Dear Desi! <small ng-bind="'(v%VERSION%)' | interpolate"></small></h1>
+        <h1>Welcome to Desi! <small ng-bind="'(v%VERSION%)' | interpolate"></small></h1>
       </div>
 
       <div class="jumbotron">
@@ -18,28 +18,42 @@
           <div class="col-lg-7">
             <br/>
             <!--iframe width="560" height="315" src="//www.youtube.com/embed/YZzhIIJmlE0" frameborder="0" allowfullscreen></iframe-->
-            <img src="http://dropsha.re/files/fly6+.8/desi-parker-2.jpg"/>
+            <pre>
+              <code>
+npm install -g desi
+
+git clone https://github.com/DearDesi/desirae-blog-template.git blog
+
+pushd blog
+
+git submodule add https://github.com/DearDesi/ruhoh-twitter.git \
+  themes/ruhoh-twitter
+
+desi serve
+              </code>
+            </pre>
             <br/>
           </div>
           <div class="col-lg-5">
-            <h2>Dear Desi is...</h2>
+            <h2>Why Desi?</h2>
             <br/>
             <ul>
-              <li>Builds in the Browser
+              <li>Built in JavaScript
                 <ul>
-                  <li>The in-browser static blog generator</li>
                   <li>Write content in Markdown, Jade, or HTML</li>
                   <li>Mustache Templates</li>
+                  <li>Use <a href="http://ruhoh.com">ruhoh</a> themes (or roll your own)</li>
                 </ul>
               </li>
-              <li>Git, Dropbox, or regular Folders for management</li>
-              <li>Go headless with Node.js support</li>
+              <li>Build your blog right in your browser</li>
+              <li>Build headless with io.js (and node.js)</li>
+              <li>Use Git, Dropbox, or regular Folders for management</li>
               <li>Dual Licensed Apache2 and MIT</li>
               <li>No Ruby version Hell - it'll still work in 6 months! :-D</li>
             </ul>
             <h3>What are you waiting for?</h3>
             <br/>
-            <a class="btn btn-primary btn-lg pull-right" href="/#authors">Get Started</a>
+            <a class="btn btn-primary btn-lg pull-right" href="/#authors">Try it!</a>
           </div>
         </div>
       </div>

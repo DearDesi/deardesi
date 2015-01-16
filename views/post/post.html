@@ -122,7 +122,23 @@
             </div>
             
             <div class="form-group">
-              <label for="inputPostAbsPath" class="col-lg-2 control-label">Filepath</label>
+              <label for="inputPostAbsPath" class="col-lg-2 control-label">Source Path</label>
+              <div class="col-lg-10">
+                <input
+                  required="required"
+                  disabled
+                  ng-model="Post.selected.sourcepath"
+                  ng-change="Post.onChange()"
+                  type="text"
+                  class="form-control"
+                  id="inputPostAbsPath"
+                  placeholder="i.e. ~/blog.me.co/posts/my-first-post.md"
+                  >
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="inputPostAbsPath" class="col-lg-2 control-label">Output Path</label>
               <div class="col-lg-10">
                 <input
                   required="required"
