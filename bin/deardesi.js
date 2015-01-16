@@ -50,7 +50,7 @@ function build(blogdir) {
 
     Desi.buildAll(desi, env).then(function () {
       Desi.write(desi, env).then(function () {
-        console.info('Built and saved to ' + path.join(env.wolking_path, env.compiled_path));
+        console.info('Built and saved to ' + path.join(env.working_path, env.compiled_path));
       });
     });
   });
