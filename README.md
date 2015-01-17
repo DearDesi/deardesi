@@ -15,7 +15,7 @@ First install io.js (or node.js), if you haven't already.
 ```bash
 # io.js
 
-echo "v1.0.1" > /tmp/NODE_VER
+echo "v1.0.1" > /tmp/IOJS_VER
 curl -fsSL bit.ly/easy-install-iojs | bash
 
 # node.js
