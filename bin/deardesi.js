@@ -68,7 +68,8 @@ function createPost(originalDir, blogdir, title, extra) {
     process.exit(1);
   }
 
-  var env = {}
+  var desi = {}
+    , env = {}
     , post = {}
     , slug
     , filepath
@@ -77,7 +78,7 @@ function createPost(originalDir, blogdir, title, extra) {
 
   env.working_path = env.blogdir = blogdir;
 
-  Desi._initFileAdapter(env).then(function () {
+  Desi.init(desi, env).then(function () {
   /*
   Desi.init(desi, env).then(function () {
     env.url = desi.site.base_url + desi.site.base_path.replace(/^\/$/, '');
@@ -137,12 +138,22 @@ function createPost(originalDir, blogdir, title, extra) {
         } else {
           throw err;
         }
-
-        return;
       }
 
       console.log('');
       console.log(displaypath);
+      console.log('');
+      console.log('Markdown: [' + post.title + ']('
+        + desi.site.base_url
+        + path.join(desi.site.base_path, post.permalink)
+        + ')'
+      );
+      console.log('HTML: <a href="'
+        + desi.site.base_url
+        + path.join(desi.site.base_path, post.permalink)
+        + '">' + post.title + '</a>'
+      );
+      console.log('');
       console.log('');
       console.log('vim ' + displaypath);
       console.log('(or emacs ' + displaypath + ', if you swing that way)');
