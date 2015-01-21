@@ -21,7 +21,7 @@ function init() {
   Desi.registerDataMapper('ruhoh@2.6', require('desirae-datamap-ruhoh').DesiraeDatamapRuhoh);
 }
 
-function serve(blogdir) {
+function serve(displayDir, blogdir) {
   var http = require('http')
     //, https = require('https')
     , app = require('../server').create({ blogdir: blogdir })
@@ -29,7 +29,7 @@ function serve(blogdir) {
     ;
 
   server = http.createServer(app).listen(65080, function () {
-    console.info("Listening from " + blogdir);
+    console.info("Listening from " + displayDir);
     console.info("Listening on http://local.dear.desi:" + server.address().port);
   });
   //secureServer = https.createServer(app).listen(65043);
@@ -202,7 +202,10 @@ cli.main(function (args, options) {
     return;
   }
   else if ('serve' === command) {
-    serve(blogdir);
+    var displayPath = path.resolve(originalDir).replace(/^\/(Users|home)\/[^\/]+\//, '~/').replace(/ /g, '\\ ')
+      ;
+
+    serve(displayPath, blogdir);
     return;
   }
   else {
