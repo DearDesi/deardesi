@@ -17,7 +17,9 @@ angular.module('myApp.build', ['ngRoute'])
     ;
 
   function init() {
-    DesiraeService.meta().then(function (desi) {
+    scope.extensions = ['md', 'html'];
+
+    return DesiraeService.meta().then(function (desi) {
       scope.blogdir = desi.blogdir.path.replace(/^\/(Users|home)\/[^\/]+\//, '~/');
       scope.site = desi.site;
 
@@ -30,13 +32,13 @@ angular.module('myApp.build', ['ngRoute'])
 
       // this is the responsibility of the build system (Dear Desi), not the library (Desirae)
       scope.development_url = location.href.replace(/\/(#.*)?$/, '') + path.join('/', 'compiled_dev');
+
+      return desi;
     }).catch(function (e) {
       window.alert("An Error Occured. Most errors that occur in the init phase are parse errors in the config files or permissions errors on files or directories, but check the error console for details.");
       console.error(e);
       throw e;
     });
-
-    scope.extensions = ['md', 'html'];
   }
 
   scope.onError = function (e) {
@@ -49,33 +51,37 @@ angular.module('myApp.build', ['ngRoute'])
   };
 
   scope.buildOne = function (envstr) {
-    var env
-      ;
+    return DesiraeService.reset().then(function () {
+      return init().then(function () {
+        var env
+          ;
 
-    // TODO is there a legitimate case where in addition to base_path (root of the blog)
-    // a user would need owner_base? i.e. school.edu/~/rogers/blog school.edu/~/rogers/assets
-    if ('production' === envstr) {
-      env = {
-        url: scope.production_url
-      , base_url: scope.production_url.replace(/(https?:\/\/[^\/#?]+).*/, '$1')
-      , base_path: scope.production_url.replace(/https?:\/\/[^\/#?]+/, '')
-      , compiled_path: 'compiled'
-      , since: 0
-      , onError: scope.onError
-      };
-    } else {
-      env = {
-        url: scope.development_url
-      , base_url: scope.development_url.replace(/(https?:\/\/[^\/#?]+).*/, '$1')
-      , base_path: scope.development_url.replace(/https?:\/\/[^\/#?]+/, '')
-      , compiled_path: 'compiled_dev'
-      , since: 0
-      , onError: scope.onError
-      };
-    }
+        // TODO is there a legitimate case where in addition to base_path (root of the blog)
+        // a user would need owner_base? i.e. school.edu/~/rogers/blog school.edu/~/rogers/assets
+        if ('production' === envstr) {
+          env = {
+            url: scope.production_url
+          , base_url: scope.production_url.replace(/(https?:\/\/[^\/#?]+).*/, '$1')
+          , base_path: scope.production_url.replace(/https?:\/\/[^\/#?]+/, '')
+          , compiled_path: 'compiled'
+          , since: 0
+          , onError: scope.onError
+          };
+        } else {
+          env = {
+            url: scope.development_url
+          , base_url: scope.development_url.replace(/(https?:\/\/[^\/#?]+).*/, '$1')
+          , base_path: scope.development_url.replace(/https?:\/\/[^\/#?]+/, '')
+          , compiled_path: 'compiled_dev'
+          , since: 0
+          , onError: scope.onError
+          };
+        }
 
-    return DesiraeService.build(env).then(function () {
-      DesiraeService.write(env);
+        return DesiraeService.build(env).then(function () {
+          DesiraeService.write(env);
+        });
+      });
     });
   };
 
