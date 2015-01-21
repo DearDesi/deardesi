@@ -16,11 +16,20 @@ angular.module('myApp.post', ['ngRoute'])
 
   function init() {
     DesiraeService.meta().then(function (desi) {
-      console.warn(desi);
+      /*
+      if (!scope.site.base_url) {
+        window.alert("Please go to the site tab and add a url first");
+        return;
+      }
+      */
       scope.blogdir = desi.blogdir.path.replace(/^\/(Users|home)\/[^\/]+\//, '~/');
       scope.site = desi.site;
       scope.env = desi.site;
       newPost();
+
+      if (/dropbox/.test(scope.site.base_url)) {
+        scope.env.explicitIndexes = true;
+      }
 
       updateDate();
     }).catch(function (e) {
@@ -95,8 +104,11 @@ angular.module('myApp.post', ['ngRoute'])
     }
 
     selected.url = window.path.join(scope.site.base_url + window.path.join(scope.site.base_path, post.yml.permalink));
+    if (scope.env.explicitIndexes && /\/$/.test(selected.url)) {
+      selected.url += 'index.html';
+    }
     selected.abspath = window.path.join(scope.blogdir, selected.path);
-    selected.sourcepath = window.path.join((selected.collection || 'posts'), scope.slug + '.' + selected.format);
+    selected.sourcepath = window.path.join(scope.blogdir, (selected.collection || 'posts'), scope.slug + '.' + selected.format);
   };
   scope.onFrontmatterChange = function () {
     var data
@@ -120,7 +132,11 @@ angular.module('myApp.post', ['ngRoute'])
       if (!/\.html?$/.test(window.path.basename(post.yml.permalink))) {
         scope.selected.path = window.path.join(scope.selected.path.replace(/\.w+$/, ''), 'index.html');
       }
+
       scope.selected.url = window.path.join(scope.site.base_url + window.path.join(scope.site.base_path, post.yml.permalink));
+      if (scope.env.explicitIndexes && /\/$/.test(scope.selected.url)) {
+        scope.selected.url += 'index.html';
+      }
       scope.selected.abspath = window.path.join(scope.blogdir, scope.selected.path);
       scope.selected.sourcepath = window.path.join((scope.selected.collection || 'posts'), scope.slug + '.' + scope.selected.format);
     } catch(e) {
