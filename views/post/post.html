@@ -77,11 +77,10 @@
             </div>
 
             <div class="form-group">
-              <label for="textAreaDesc" class="col-lg-2 control-label">Description*
+              <label for="textAreaDesc" class="col-lg-2 control-label">Description
                 <small>(<span ng-bind="Post.selected.post.yml.description.length || 0"></span>/140)</small></label>
               <div class="col-lg-10">
                 <textarea
-                  required="required"
                   ng-change="Post.onChange()"
                   ng-model="Post.selected.post.yml.description"
                   placeholder="i.e. An alternate recipe for Peeta Mellarks's famous apple goat cheese tarts using only ingredients available in district 10"

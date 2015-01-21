@@ -69,27 +69,23 @@
             -->
 
             <div class="form-group">
-              <label for="inputProdHost" class="col-lg-3 control-label">Base URL</label>
+              <label for="inputProdUrl" class="col-lg-3 control-label">URL</label>
               <div class="col-lg-9">
-                <input ng-model="Site.site.base_url"
+                <input
+                  ng-model="Site.url"
+                  ng-change="Site.onChange()"
                   required="required"
-                  placeholder="i.e. https://example.com in https://example.com/myblog"
-                  type="url"
+                  placeholder="i.e. https://example.com/myblog"
+                  type="text"
                   class="form-control"
                   id="inputProdHost">
                 <br/>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label for="inputProdBase" class="col-lg-3 control-label">Base Path</label>
-              <div class="col-lg-9">
-                <input ng-model="Site.site.base_path"
-                  required="required"
-                  placeholder="i.e. / for blog.test.com or /blog for test.com/blog"
-                  type="text"
-                  class="form-control"
-                  id="inputProdBase">
+                <span class="help-block"
+                  ><span class="text-muted" ng-bind="Site.base_url"></span
+                  ><strong
+                    ><span ng-bind="Site.base_path"></span
+                    ><span ng-bind="Site.dropboxIndex"></span
+                  ></strong>
               </div>
             </div>
 

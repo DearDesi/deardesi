@@ -28,7 +28,10 @@ angular.module('myApp.build', ['ngRoute'])
         return;
       }
 
-      scope.production_url = desi.site.base_url + path.join('/', desi.site.base_path);
+      scope.display_url = scope.production_url = desi.site.base_url + path.join('/', desi.site.base_path);
+      if (/dropbox/.test(scope.display_url)) {
+        scope.display_url += '/index.html';
+      }
 
       // this is the responsibility of the build system (Dear Desi), not the library (Desirae)
       scope.development_url = location.href.replace(/\/(#.*)?$/, '') + path.join('/', 'compiled_dev');
