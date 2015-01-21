@@ -103,23 +103,7 @@
                   id="textAreaYaml"></textarea>
               </div>
             </div>
-
-            <div class="form-group">
-              <label for="inputPostAbsPath" class="col-lg-2 control-label">URL</label>
-              <div class="col-lg-10">
-                <input
-                  required="required"
-                  disabled
-                  ng-model="Post.selected.url"
-                  ng-change="Post.onChange()"
-                  type="text"
-                  class="form-control"
-                  id="inputPostAbsPath"
-                  placeholder="i.e. https://blog.me.co/posts/my-first-post/"
-                  >
-              </div>
-            </div>
-            
+           
             <div class="form-group">
               <label for="inputPostAbsPath" class="col-lg-2 control-label">Source Path</label>
               <div class="col-lg-10">
@@ -152,6 +136,50 @@
               </div>
             </div>
 
+            <div class="form-group">
+              <label for="inputPostAbsPath" class="col-lg-2 control-label">Links</label>
+              <div class="col-lg-10">
+                <p class="help-block"
+                  ><a ng-href="{{Post.selected.url}}"><span
+                    ng-bind="Post.selected.url"></span></a>
+                </p>
+               <input
+                  required="required"
+                  ng-model="Post.selected.markdown"
+                  ng-change="Post.onChange()"
+                  type="text"
+                  class="form-control"
+                  id="inputPostMarkdown"
+                  placeholder="i.e. [My First Post](/articles/my-first-post.html)"
+                  >
+               <input
+                  required="required"
+                  ng-model="Post.selected.ahref"
+                  ng-change="Post.onChange()"
+                  type="text"
+                  class="form-control"
+                  id="inputPostAhref"
+                  placeholder="i.e. <a href='/articles/my-first-post.html'>My First Post</a>"
+                  >
+              </div>
+            </div>
+ 
+            <!--div class="form-group">
+              <label for="inputPostAbsPath" class="col-lg-2 control-label">URL</label>
+              <div class="col-lg-10">
+                <input
+                  required="required"
+                  disabled
+                  ng-model="Post.selected.url"
+                  ng-change="Post.onChange()"
+                  type="text"
+                  class="form-control"
+                  id="inputPostAbsPath"
+                  placeholder="i.e. https://blog.me.co/posts/my-first-post/"
+                  >
+              </div>
+            </div-->
+ 
             <!--
             <div class="form-group">
               <label for="select" class="col-lg-2 control-label">Selects</label>

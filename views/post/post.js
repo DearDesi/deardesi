@@ -73,6 +73,7 @@ angular.module('myApp.post', ['ngRoute'])
       ;
 
     post.yml.title = post.yml.title || '';
+    selected.title = post.yml.title;
     post.yml.description = post.yml.description || '';
 
     scope.slug = post.yml.title.toLowerCase()
@@ -107,7 +108,9 @@ angular.module('myApp.post', ['ngRoute'])
     if (scope.env.explicitIndexes && /\/$/.test(selected.url)) {
       selected.url += 'index.html';
     }
-    selected.abspath = window.path.join(scope.blogdir, selected.path);
+    selected.markdown   = '[' + selected.title + '](' + selected.url + ')';
+    selected.ahref      = '<a href="' + selected.url + '">' + selected.title + '</a>';
+    selected.abspath    = window.path.join(scope.blogdir, selected.path);
     selected.sourcepath = window.path.join(scope.blogdir, (selected.collection || 'posts'), scope.slug + '.' + selected.format);
   };
   scope.onFrontmatterChange = function () {
