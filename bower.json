@@ -38,7 +38,7 @@
     "html5-boilerplate": "~4.3.0",
     "bootstrap": "~3.3.1",
     "md5": "~0.1.3",
-    "desirae": "~0.9.11",
+    "desirae": "~0.10.0",
     "desirae-datamap-ruhoh": "~1.0.0"
   }
 }
