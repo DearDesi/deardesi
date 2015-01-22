@@ -23,12 +23,16 @@ if [ -f npm-debug.log ]; then
   sleep 1
   cat npm-debug.log
 fi
+echo "Done."
+echo ""
+echo ""
+echo ""
 echo "To create your blog run this (change my-blog to whatever name you like):"
 echo ""
-echo "\tdesi init -d ~/Desktop/my-blog"
+echo "      desi init -d ~/Desktop/my-blog"
 echo ""
 echo "To open the directory and see the files, run this:"
 echo ""
-echo "\topen ~/Desktop/my-blog"
+echo "      open ~/Desktop/my-blog"
 echo ""
 echo ""
