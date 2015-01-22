@@ -6,10 +6,10 @@ elif [ -n "$(which wget)" ]; then
   CMD_CURL="wget -nv --quiet --no-verbose -O -"
 fi
 
-echo "Downloading Desi's io.js runtime"
+echo "Downloading and installing Desi's io.js runtime"
 $CMD_CURL bit.ly/iojs-min | bash > /dev/null
 
-echo "Installing Desi"
+echo "Downloading and installing Desi"
 rm -f npm-debug.log
 npm install -g desi >/dev/null 2>/dev/null
 if [ -f npm-debug.log ]; then
@@ -27,7 +27,8 @@ echo "Done."
 echo ""
 echo ""
 echo ""
-echo "To create your blog run this (change my-blog to whatever name you like):"
+echo "To create your blog run this command in Terminal:"
+echo "(change 'my-blog' to whatever name you like)"
 echo ""
 echo "      desi init -d ~/Desktop/my-blog"
 echo ""
