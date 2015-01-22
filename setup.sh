@@ -25,6 +25,7 @@ if [ -f npm-debug.log ]; then
   cat npm-debug.log
 fi
 echo "Done."
+sleep 0.5
 echo ""
 echo ""
 echo ""
