@@ -1,7 +1,7 @@
 Not a Web Developer?
 ====================
 
-You're in the wrong place. Go to <http://dear.desi> and follow the instructions there.
+You're in the wrong place. **Go to <http://dear.desi>** and follow the instructions there.
 
 Dear Desi
 =========
