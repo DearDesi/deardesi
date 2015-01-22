@@ -1,3 +1,8 @@
+Not a Web Developer?
+====================
+
+You're in the wrong place. Go to <http://dear.desi>
+
 Dear Desi
 =========
 
