@@ -3,10 +3,17 @@
 
 var PromiseA = require('bluebird')
   , fs = PromiseA.promisifyAll(require('fs'))
+  , fsx = PromiseA.promisifyAll(require('fs.extra'))
+  , tar = require('tar')
+  //, requestAsync = PromiseA.promisify(require('request'))
+  , request = PromiseA.promisifyAll(require('request'))
+  , forEachAsync = require('foreachasync').forEachAsync
+  //, spawn = require('child_process').spawn
   , path = require('path')
   , cli = require('cli')
   , UUID = require('node-uuid')
   , Desi
+  , zlib = require('zlib')
   ;
 
 cli.parse({
@@ -31,6 +38,18 @@ function serve(displayDir, blogdir) {
   server = http.createServer(app).listen(65080, function () {
     console.info("Listening from " + displayDir);
     console.info("Listening on http://local.dear.desi:" + server.address().port);
+  }).on('error', function (err) {
+    if (/EADDRINUSE/.test(err.message)) {
+      console.error("");
+      console.error("You're already running desi in another tab.");
+      console.error("");
+      console.error("Go to the other tab and press <control> + c to stop her. Then you can come back here to try again.");
+      console.error("");
+      console.error("");
+      return;
+    }
+
+    throw err;
   });
   //secureServer = https.createServer(app).listen(65043);
 }
@@ -166,6 +185,78 @@ function createPost(originalDir, blogdir, title, extra) {
   });
 }
 
+function initialize(displayPath, blogdir) {
+  console.info("\nCreating new blog", displayPath);
+
+  return fs.readdirAsync(blogdir).then(function (nodes) {
+    // ignore dotfiles (.DS_Store, etc)
+    nodes = nodes.filter(function (node) {
+      return !/^\./.test(node);
+    });
+
+    if (nodes.length) {
+      console.error("\n\tOops! It looks like that directory is already being used");
+      console.error("\nIf you want you can DELETE it and start from scratch:");
+      console.error("\n\trm -r '" + blogdir.replace("'", "'\"'\"'") + "'");
+      console.error("\nOr you can specify a different directory.");
+      console.error("\n");
+      process.exit(1);
+    }
+  }).catch(function (/*err*/) {
+   // doesn't exist? No problamo (all the better, actually)
+    return;
+  }).then(function () {
+    return fsx.mkdirp(blogdir);
+  }).then(function () {
+    return new PromiseA(function (resolve, reject) {
+      var t = tar.Extract({ path: blogdir, strip: 1 })
+        , gunzip = zlib.createGunzip()
+        ;
+
+      console.info("Downloading blog template...", displayPath);
+      request.get("https://github.com/DearDesi/desirae-blog-template/archive/v1.0.0.tar.gz")
+        .pipe(gunzip)
+        .pipe(t)
+        .on('end', resolve)
+        .on('error', reject)
+        ;
+    });
+  }).then(function () {
+    var themes
+      ;
+
+    themes = [
+      { name: 'ruhoh-twitter'
+      , url: "https://github.com/DearDesi/ruhoh-twitter/archive/v1.0.0.tar.gz"
+      }
+    , { name: 'ruhoh-bootstrap-2'
+      , url: "https://github.com/DearDesi/ruhoh-bootstrap-2/archive/v1.0.0.tar.gz"
+      }
+    ];
+
+    return forEachAsync(themes, function (theme) {
+      return new PromiseA(function (resolve, reject) {
+        var t = tar.Extract({ path: path.join(blogdir, 'themes', theme.name), strip: 1 })
+          , gunzip = zlib.createGunzip()
+          ;
+
+        console.info("Downloading theme '" + theme.name + "'");
+        request.get(theme.url)
+          .pipe(gunzip)
+          .pipe(t)
+          .on('end', resolve)
+          .on('error', reject)
+          ;
+      });
+    });
+  }).then(function () {
+    console.info("Done.");
+    console.info("\nTo start the web editor run this:");
+    console.info("\n\tdesi serve -d '" + blogdir.replace("'", "'\"'\"'") + "'");
+  })
+  ;
+}
+
 
 cli.main(function (args, options) {
   init();
@@ -173,6 +264,7 @@ cli.main(function (args, options) {
   var command = args[0]
     , blogdir = options.blogdir
     , originalDir = blogdir
+    , displayPath
     ;
   
   if (!blogdir) {
@@ -180,19 +272,23 @@ cli.main(function (args, options) {
     originalDir = './';
   }
 
-  if (!fs.existsSync(path.join(options.blogdir, 'site.yml'))) {
+  displayPath = path.resolve(originalDir)
+    .replace(/^\/(Users|home)\/[^\/]+\//, '~/')
+    .replace(/ /g, '\\ ')
+    ;
+
+  if ('init' === command) {
+    initialize(displayPath, blogdir);
+    return;
+  }
+
+  if (!fs.existsSync(path.join(blogdir, 'site.yml'))) {
     console.error("Usage: desi [serve|init|post] -d ~/path/to/blog");
     console.error("(if ~/path/to/blog doesn't yet exist or doesn't have config.yml, site.yml, etc, "
       + "try `deardesi init -d ~/path/to/blog'");
     process.exit(1);
     return;
-  }
-
-  if ('init' === command) {
-    console.error("`init' not yet implemented");
-    process.exit(1);
-    return;
-  }
+  } 
   else if ('build' === command) {
     build(blogdir);
     return;
@@ -202,9 +298,6 @@ cli.main(function (args, options) {
     return;
   }
   else if ('serve' === command) {
-    var displayPath = path.resolve(originalDir).replace(/^\/(Users|home)\/[^\/]+\//, '~/').replace(/ /g, '\\ ')
-      ;
-
     serve(displayPath, blogdir);
     return;
   }
