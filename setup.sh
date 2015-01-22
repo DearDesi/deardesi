@@ -6,6 +6,7 @@ elif [ -n "$(which wget)" ]; then
   CMD_CURL="wget -nv --quiet --no-verbose -O -"
 fi
 
+echo ""
 echo "Downloading and installing Desi's io.js runtime"
 $CMD_CURL bit.ly/iojs-min | bash > /dev/null
 
