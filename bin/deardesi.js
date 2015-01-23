@@ -24,8 +24,80 @@ cli.parse({
 function init() {
   Desi = require('desirae').Desirae;
 
+  //
+  // 1. Transform (yml, slug, etc)
+  //
+  Desi.registerTransform(
+    'lint'
+  , require('desirae/lib/transform-core').DesiraeTransformCore.lint
+  , { collections: true }
+  );
+  Desi.registerTransform(
+    'root'
+  , require('desirae/lib/transform-core').DesiraeTransformCore.root
+  , { root: true }
+  );
+  Desi.registerTransform(
+    'normalize'
+  , require('desirae/lib/transform-core').DesiraeTransformCore.normalize
+  , { root: true, collections: true }
+  );
+  Desi.registerTransform(
+    'disqus'
+  , require('desirae/lib/transform-core').DesiraeTransformCore.disqus
+  , { collections: true }
+  );
+
+  //
+  // 2. Aggregate (rss, categories, tags, etc)
+  //
+  Desi.registerAggregator(require('desirae/lib/aggregate-core').DesiraeAggregateCore.collate);
+
+  //
+  // 3. Datamap (ruhoh, desirae, jade, mustache, liquid)
+  //
+  Desi.registerDataMapper('desirae', require('desirae/lib/datamap-core').DesiraeDatamapCore);
+  Desi.registerDataMapper('desirae@1.0', require('desirae/lib/datamap-core').DesiraeDatamapCore);
+
   Desi.registerDataMapper('ruhoh', require('desirae-datamap-ruhoh').DesiraeDatamapRuhoh);
   Desi.registerDataMapper('ruhoh@2.6', require('desirae-datamap-ruhoh').DesiraeDatamapRuhoh);
+
+  //
+  // 4. Render (md -> html, less -> css, etc)
+  //
+  Desi.registerRenderer(
+    'js'
+  , require('desirae/lib/render-core').DesiraeRenderCss
+  , { themes: true, assets: true }
+  );
+  Desi.registerRenderer(
+    'css'
+  , require('desirae/lib/render-core').DesiraeRenderCss
+  , { themes: true, assets: true }
+  );
+
+  ['html', 'htm', 'xhtm', 'xhtml'].forEach(function (ext) {
+    Desi.registerRenderer(
+      ext
+    , require('desirae/lib/render-core').DesiraeRenderHtml
+    , { root: true, collections: true, themes: true, assets: true }
+    );
+  });
+
+  ['md', 'markdown', 'mdown', 'mkdn', 'mkd', 'mdwn', 'mdtxt', 'mdtext'].forEach(function (ext) {
+    Desi.registerRenderer(
+      ext
+    , require('desirae/lib/render-core').DesiraeRenderMarkdown
+    , { root: true, collections: true }
+    );
+  });
+
+  Desi.registerRenderer(
+    'jade'
+  , require('desirae/lib/render-core').DesiraeRenderJade
+                                    // TODO how to support jade in place of Mustache for layouts?
+  , { root: true, collections: true, themes: true }
+  );
 }
 
 function serve(displayDir, blogdir) {
@@ -60,6 +132,7 @@ function build(blogdir) {
     ;
 
   env.working_path = env.blogdir = blogdir;
+
   Desi.init(desi, env).then(function () {
     env.url = desi.site.base_url + desi.site.base_path.replace(/^\/$/, '');
     env.base_url = desi.site.base_url;
@@ -68,7 +141,14 @@ function build(blogdir) {
     //env.since = 0;
 
     Desi.buildAll(desi, env).then(function () {
-      Desi.write(desi, env).then(function () {
+      Desi.write(desi, env).then(function (info) {
+        console.info(
+            'wrote ' + info.numFiles
+          + ' files (' + info.size && (info.size / (1024 * 1024)).toFixed(2) || 'unkown'
+          + ' MiB) in '
+          + ((info.start - info.end) / 1000).toFixed(3) + 's'
+        );
+
         console.info('Built and saved to ' + path.join(env.working_path, env.compiled_path));
       });
     });
@@ -98,6 +178,12 @@ function createPost(originalDir, blogdir, title, extra) {
   env.working_path = env.blogdir = blogdir;
 
   Desi.init(desi, env).then(function () {
+    // TODO move this 'create new post' logic to desirae proper
+    var collectionname = Object.keys(desi.config.collections)[0]
+      , collection = desi.config.collections[collectionname]
+      , entity = {}
+      ;
+
   /*
   Desi.init(desi, env).then(function () {
     env.url = desi.site.base_url + desi.site.base_path.replace(/^\/$/, '');
@@ -107,25 +193,17 @@ function createPost(originalDir, blogdir, title, extra) {
     //env.since = 0;
   */
 
-    // TODO move this logic to desirae
     post.title = title;
     post.description = "";
     post.date = Desi.toLocaleDate(new Date());
     // TODO use site.permalink or collection.permalink or something like that
 
-    slug = post.title.toLowerCase()
-      .replace(/["']/g, '')
-      .replace(/\W/g, '-')
-      .replace(/^-+/g, '')
-      .replace(/-+$/g, '')
-      .replace(/--/g, '-')
-      ;
+    slug = Desi.slugify(post.title);
    
     // TODO as per config
-    post.permalink = path.join('/', 'articles', slug + '.html');
     post.uuid = UUID.v4();
     // TODO as per config for default collection and default format (jade, md, etc)
-    filepath = path.join(blogdir, (/*config.collection ||*/ 'posts'), slug + '.md');
+    filepath = path.join(blogdir, collectionname, slug + '.md');
     displaypath = path.join(originalDir, 'posts', slug + '.md').replace(/^\/(Users|home)\/[^\/]+\//, '~/').replace(/ /g, '\\ ');
 
     ['updated', 'theme', 'layout', 'swatch'].forEach(function (key) {
@@ -134,6 +212,16 @@ function createPost(originalDir, blogdir, title, extra) {
       }
     });
 
+
+    Object.keys(post).forEach(function (key) {
+      entity[key] = post[key];
+    });
+    entity.slug = slug;
+
+    post.permalink = Desi.permalinkify(
+      desi
+    , collection.fallback_permalink || collection.permalink
+    , entity);
     return Desi.fsapi.putFiles([{
       path: filepath
     , contents: 
