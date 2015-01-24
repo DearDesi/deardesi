@@ -1,3 +1,8 @@
+Not a Web Developer?
+====================
+
+You're in the wrong place. **Go to <http://dear.desi>** and follow the instructions there.
+
 Dear Desi
 =========
 
@@ -15,7 +20,7 @@ First install io.js (or node.js), if you haven't already.
 ```bash
 # io.js
 
-echo "v1.0.1" > /tmp/IOJS_VER
+echo "v1.0.3" > /tmp/IOJS_VER
 curl -fsSL bit.ly/easy-install-iojs | bash
 
 # node.js
