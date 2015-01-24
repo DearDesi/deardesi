@@ -68,7 +68,7 @@ function init() {
   //
   Desi.registerRenderer(
     'js'
-  , require('desirae/lib/render-core').DesiraeRenderCss
+  , require('desirae/lib/render-core').DesiraeRenderJs
   , { themes: true, assets: true }
   );
   Desi.registerRenderer(
