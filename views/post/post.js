@@ -12,6 +12,7 @@ angular.module('myApp.post', ['ngRoute'])
   , ['$scope', '$location', '$timeout', 'Desirae'
   , function ($scope, $location, $timeout, DesiraeService) {
   var scope = this
+    , path = window.path
     ;
 
   function init() {
@@ -48,6 +49,7 @@ angular.module('myApp.post', ['ngRoute'])
     , uuid: window.uuid.v4()
     , abspath: scope.blogdir
     , sourcepath: ''
+    , fileepath: ''
     , post: { 
         yml: {
           title: ""
@@ -91,7 +93,7 @@ angular.module('myApp.post', ['ngRoute'])
       post.yml.permalink = selected.permalink;
     }
     /*
-    if (window.path.extname(post.yml.permalink) !== '.' + selected.format) {
+    if (path.extname(post.yml.permalink) !== '.' + selected.format) {
      post.yml.permalink = post.yml.permalink.replace(/\.\w+$/, '.' + selected.format);
     }
     */
@@ -99,19 +101,20 @@ angular.module('myApp.post', ['ngRoute'])
     post.frontmatter = window.jsyaml.dump(post.yml).trim();
 
     // TODO use some sort of filepath pattern in config.yml
-    selected.path = window.path.join((scope.env.compiled_path || 'compiled'), post.yml.permalink);
+    selected.path = path.join((scope.env.compiled_path || 'compiled'), post.yml.permalink);
     if (!/\.html?$/.test(selected.path)) {
-      selected.path = window.path.join(selected.path, 'index.html');
+      selected.path = path.join(selected.path, 'index.html');
     }
 
-    selected.url = window.path.join(scope.site.base_url + window.path.join(scope.site.base_path, post.yml.permalink));
+    selected.url = path.join(scope.site.base_url + path.join(scope.site.base_path, post.yml.permalink));
     if (scope.env.explicitIndexes && /\/$/.test(selected.url)) {
       selected.url += 'index.html';
     }
     selected.markdown   = '[' + selected.title + '](' + selected.url + ')';
     selected.ahref      = '<a href="' + selected.url + '">' + selected.title + '</a>';
-    selected.abspath    = window.path.join(scope.blogdir, selected.path);
-    selected.sourcepath = window.path.join(scope.blogdir, (selected.collection || 'posts'), scope.slug + '.' + selected.format);
+    selected.abspath    = path.join(scope.blogdir, selected.path);
+    selected.filepath   = path.join((selected.collection || 'posts'), scope.slug + '.' + selected.format);
+    selected.sourcepath = path.join(scope.blogdir, (selected.collection || 'posts'), scope.slug + '.' + selected.format);
   };
   scope.onFrontmatterChange = function () {
     var data
@@ -131,17 +134,18 @@ angular.module('myApp.post', ['ngRoute'])
 
       post = scope.selected.post;
 
-      scope.selected.path = window.path.join((scope.env.compiled_path || 'compiled'), post.yml.permalink);
-      if (!/\.html?$/.test(window.path.basename(post.yml.permalink))) {
-        scope.selected.path = window.path.join(scope.selected.path.replace(/\.w+$/, ''), 'index.html');
+      scope.selected.path = path.join((scope.env.compiled_path || 'compiled'), post.yml.permalink);
+      if (!/\.html?$/.test(path.basename(post.yml.permalink))) {
+        scope.selected.path = path.join(scope.selected.path.replace(/\.w+$/, ''), 'index.html');
       }
 
-      scope.selected.url = window.path.join(scope.site.base_url + window.path.join(scope.site.base_path, post.yml.permalink));
+      scope.selected.url = path.join(scope.site.base_url + path.join(scope.site.base_path, post.yml.permalink));
       if (scope.env.explicitIndexes && /\/$/.test(scope.selected.url)) {
         scope.selected.url += 'index.html';
       }
-      scope.selected.abspath = window.path.join(scope.blogdir, scope.selected.path);
-      scope.selected.sourcepath = window.path.join((scope.selected.collection || 'posts'), scope.slug + '.' + scope.selected.format);
+      scope.selected.abspath = path.join(scope.blogdir, scope.selected.path);
+      scope.selected.sourcepath = path.join(scope.blogdir, (scope.selected.collection || 'posts'), scope.slug + '.' + scope.selected.format);
+      scope.selected.filepath   = path.join((scope.selected.collection || 'posts'), scope.slug + '.' + scope.selected.format);
     } catch(e) {
       console.error(e);
       console.error('ignoring update that created parse error');
@@ -178,7 +182,7 @@ angular.module('myApp.post', ['ngRoute'])
       ;
 
     files.push({
-      path: scope.selected.sourcepath
+      path: scope.selected.filepath
     , contents: 
           '---\n'
         + scope.selected.post.frontmatter.trim()
