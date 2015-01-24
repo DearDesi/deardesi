@@ -4,9 +4,79 @@ angular.module('myApp.services', []).
       , desi        = {/*TODO api_base: '/api'*/}
       ;
 
-    // TODO what version of ruhoh are ruhoh-twitter and ruhoh-boostrap-2
-    Desi.registerDataMapper('ruhoh', window.DesiraeDatamapRuhoh || require('desirae-datamap-ruhoh').DesiraeDatamapRuhoh);
-    Desi.registerDataMapper('ruhoh@2.6', window.DesiraeDatamapRuhoh || require('desirae-datamap-ruhoh').DesiraeDatamapRuhoh);
+    //
+    // 1. Transform (yml, slug, etc)
+    //
+    Desi.registerTransform(
+      'lint'
+    , window.DesiraeTransformCore.lint
+    , { collections: true }
+    );
+    Desi.registerTransform(
+      'root'
+    , window.DesiraeTransformCore.root
+    , { root: true }
+    );
+    Desi.registerTransform(
+      'normalize'
+    , window.DesiraeTransformCore.normalize
+    , { root: true, collections: true }
+    );
+    Desi.registerTransform(
+      'disqus'
+    , window.DesiraeTransformCore.disqus
+    , { collections: true }
+    );
+
+    //
+    // 2. Aggregate (rss, categories, tags, etc)
+    //
+    Desi.registerAggregator(window.DesiraeAggregateCore.collate);
+
+    //
+    // 3. Datamap (ruhoh, desirae, jade, mustache, liquid)
+    //
+    Desi.registerDataMapper('desirae', window.DesiraeDatamapCore);
+    Desi.registerDataMapper('desirae@1.0', window.DesiraeDatamapCore);
+    Desi.registerDataMapper('ruhoh', window.DesiraeDatamapRuhoh);
+    Desi.registerDataMapper('ruhoh@1.0', window.DesiraeDatamapRuhoh);
+    Desi.registerDataMapper('ruhoh@2.6', window.DesiraeDatamapRuhoh);
+
+    //
+    // 4. Render (md -> html, less -> css, etc)
+    //
+    Desi.registerRenderer(
+      'js'
+    , window.DesiraeRenderCss
+    , { themes: true, assets: true }
+    );
+    Desi.registerRenderer(
+      'css'
+    , window.DesiraeRenderCss
+    , { themes: true, assets: true }
+    );
+
+    ['html', 'htm', 'xhtm', 'xhtml'].forEach(function (ext) {
+      Desi.registerRenderer(
+        ext
+      , window.DesiraeRenderHtml
+      , { root: true, collections: true, themes: true, assets: true }
+      );
+    });
+
+    ['md', 'markdown', 'mdown', 'mkdn', 'mkd', 'mdwn', 'mdtxt', 'mdtext'].forEach(function (ext) {
+      Desi.registerRenderer(
+        ext
+      , window.DesiraeRenderMarkdown
+      , { root: true, collections: true }
+      );
+    });
+
+    Desi.registerRenderer(
+      'jade'
+    , window.DesiraeRenderJade
+    , { root: true, collections: true, themes: true }
+    );
 
     function gdrive2host(str) {
       // https://drive.google.com/folderview?id=0ByLnfhJOd1-baUh1Wms0US16QkE&usp=sharing
