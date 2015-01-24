@@ -1,0 +1,8 @@
+title                         : John Doe
+tagline                       : "I'm an adult and I expect to be read like one!"
+description                   : The one stop source for all things John Doe - my loves, hates, ramblingis, musings, and general misperadventurehaps.
+base_url                      : "http://school.edu/~/johndoe"
+base_path                     : /blog/
+google_analytics_tracking_id  : UA-XXXXXXXX-1
+disqus_shortname              : johndoe691-blog
+theme                         : ruhoh-twitter
