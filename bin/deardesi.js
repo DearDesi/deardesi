@@ -58,8 +58,9 @@ function init() {
   //
   Desi.registerDataMapper('desirae', require('desirae/lib/datamap-core').DesiraeDatamapCore);
   Desi.registerDataMapper('desirae@1.0', require('desirae/lib/datamap-core').DesiraeDatamapCore);
-
+  // TODO ruhoh versions are ruhoh-twitter (1.0) and ruhoh-boostrap-2 (2.6)
   Desi.registerDataMapper('ruhoh', require('desirae-datamap-ruhoh').DesiraeDatamapRuhoh);
+  Desi.registerDataMapper('ruhoh@1.0', require('desirae-datamap-ruhoh').DesiraeDatamapRuhoh);
   Desi.registerDataMapper('ruhoh@2.6', require('desirae-datamap-ruhoh').DesiraeDatamapRuhoh);
 
   //
@@ -143,10 +144,11 @@ function build(blogdir) {
     Desi.buildAll(desi, env).then(function () {
       Desi.write(desi, env).then(function (info) {
         console.info(
-            'wrote ' + info.numFiles
-          + ' files (' + info.size && (info.size / (1024 * 1024)).toFixed(2) || 'unkown'
-          + ' MiB) in '
-          + ((info.start - info.end) / 1000).toFixed(3) + 's'
+            'wrote', info.numFiles
+          , 'files'
+          , '(' + (info.size && (info.size / (1024 * 1024)).toFixed(2) || 'unkown'), 'MiB)'
+          , 'in'
+          , ((info.end - info.start) / 1000).toFixed(3) + 's'
         );
 
         console.info('Built and saved to ' + path.join(env.working_path, env.compiled_path));
@@ -302,7 +304,7 @@ function initialize(displayPath, blogdir) {
         ;
 
       console.info("Downloading blog template...", displayPath);
-      request.get("https://github.com/DearDesi/desirae-blog-template/archive/v1.0.0.tar.gz")
+      request.get("https://github.com/DearDesi/desirae-blog-template/archive/v1.1.0.tar.gz")
         .pipe(gunzip)
         .pipe(t)
         .on('end', resolve)
@@ -318,7 +320,7 @@ function initialize(displayPath, blogdir) {
       , url: "https://github.com/DearDesi/ruhoh-twitter/archive/v1.0.0.tar.gz"
       }
     , { name: 'ruhoh-bootstrap-2'
-      , url: "https://github.com/DearDesi/ruhoh-bootstrap-2/archive/v1.0.0.tar.gz"
+      , url: "https://github.com/DearDesi/ruhoh-bootstrap-2/archive/v1.0.1.tar.gz"
       }
     ];
 
