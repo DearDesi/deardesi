@@ -1,9 +1,12 @@
 #!/bin/bash
 
-if [ -n "" ]; then
+if [ -n "$(which curl)" ]; then
   CMD_CURL="curl -fsSL"
 elif [ -n "$(which wget)" ]; then
   CMD_CURL="wget -nv --quiet --no-verbose -O -"
+else
+  echo "Couldn't find 'curl' or 'wget' (that's weird), could not continue."
+  exit 1
 fi
 
 echo ""
