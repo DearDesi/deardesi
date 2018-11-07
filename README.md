@@ -1,3 +1,8 @@
+Moved
+=====
+
+Now at https://git.coolaj86.com/coolaj86/deardesi.js
+
 <!--
 Not a Web Developer?
 ====================
@@ -96,7 +101,7 @@ Obviously this is a little different for everyone, so here's what I'd recommend:
 3. edit `config.yml` to add a config with a permalink with your collections (posts, articles, essays, whatever you call them)
 4. skip ahead to the *Setup your blog* section and make sure your `site.yml` and `authors/xxx.yml` are correct.
 5. run `desi build -d /path/to/blog` to test if there are any issues with your existing yaml
-  * if there are, you can take a look at the [normalize](https://github.com/DearDesi/desirae/blob/master/lib/transform-core.js#L72) function and perhaps hand-edit a few things (and when you're ready, you can [register your transform](https://github.com/DearDesi/deardesi/blob/master/bin/deardesi.js#L28) for collections. 
+  * if there are, you can take a look at the [normalize](https://github.com/DearDesi/desirae/blob/master/lib/transform-core.js#L72) function and perhaps hand-edit a few things (and when you're ready, you can [register your transform](https://github.com/DearDesi/deardesi/blob/master/bin/deardesi.js#L28) for collections.
 6. Now copy over your theme and set it to be the default in `site.yml`
 7. build again. Your site probably won't look right:
   * look for stuff like `urls.base_url`, `host`, `page.url` that might have an extra `/` at the beginning or end or be named slightly differently.
